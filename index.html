@@ -2,16 +2,19 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Temporizador L10 — Caribbean Sign Supply</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="L10 EOS">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#1A1A1A;padding:24px;min-height:100vh}
+body{background:#1A1A1A;padding:clamp(12px,3vw,24px);min-height:100vh;min-height:-webkit-fill-available}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #333}
 .header-left .title{color:#fff;font-size:16px;font-weight:500;letter-spacing:0.5px}
 .header-left .sub{color:#666;font-size:12px;margin-top:3px}
@@ -24,20 +27,20 @@ body{background:#1A1A1A;padding:24px;min-height:100vh}
 .status-badge{padding:4px 14px;font-size:10px;font-weight:500;letter-spacing:0.8px;background:#222;color:#555}
 .seg-progress{color:#555;font-size:12px;letter-spacing:0.5px}
 .overtime-banner{background:#C0392B;color:#fff;padding:10px;font-size:13px;font-weight:500;text-align:center;letter-spacing:0.5px;margin-bottom:12px}
-.seg-main{background:#111;border:1px solid #333;padding:28px 32px;margin-bottom:14px;text-align:center}
+.seg-main{background:#111;border:1px solid #333;padding:clamp(10px,2.5vw,28px) clamp(10px,3vw,32px);margin-bottom:10px;text-align:center}
 .seg-num{color:#444;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
-.seg-name{color:#fff;font-size:34px;font-weight:500;margin-bottom:8px}
-.seg-desc{color:#555;font-size:13px;margin-bottom:28px;line-height:1.6;max-width:640px;margin-left:auto;margin-right:auto}
-.timers-row{display:flex;align-items:flex-end;justify-content:center;gap:40px;margin-bottom:14px}
-.timer-block{display:flex;flex-direction:column;align-items:center}
+.seg-name{color:#fff;font-size:clamp(20px,4.5vw,34px);font-weight:500;margin-bottom:8px}
+.seg-desc{color:#555;font-size:13px;margin-bottom:clamp(10px,2vw,20px);line-height:1.5;max-width:640px;margin-left:auto;margin-right:auto}
+.timers-row{display:flex;align-items:flex-end;justify-content:center;gap:clamp(8px,3vw,40px);margin-bottom:10px}
+.timer-block{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
 .timer-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:6px}
-.seg-timer{font-size:88px;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:-3px;color:#F4C300;line-height:1}
+.seg-timer{font-size:clamp(34px,9vw,88px);font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:-1px;color:#F4C300;line-height:1}
 .seg-timer.warning{color:#E87C2E}
 .seg-timer.overtime{color:#C0392B}
-.seg-real{font-size:48px;font-weight:300;font-variant-numeric:tabular-nums;color:#555;line-height:1}
+.seg-real{font-size:clamp(20px,5.5vw,48px);font-weight:300;font-variant-numeric:tabular-nums;color:#555;line-height:1}
 .seg-real.active{color:#888}
-.seg-asig{font-size:36px;font-weight:300;font-variant-numeric:tabular-nums;color:#444;line-height:1}
-.divider-v{width:1px;background:#2A2A2A;align-self:stretch;margin:0 8px}
+.seg-asig{font-size:clamp(16px,4.5vw,36px);font-weight:300;font-variant-numeric:tabular-nums;color:#444;line-height:1}
+.divider-v{width:1px;background:#2A2A2A;align-self:stretch;margin:0 4px}
 .assigned-info{font-size:11px;color:#444;text-align:center}
 .progress-bar-wrap{background:#222;height:5px;margin-bottom:18px}
 .progress-bar{height:5px;background:#7A7A76;transition:width 1s linear}
@@ -45,9 +48,9 @@ body{background:#1A1A1A;padding:24px;min-height:100vh}
 .progress-bar.overtime{background:#C0392B}
 .controls{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
 .btn{padding:12px 24px;border:none;cursor:pointer;font-size:13px;font-weight:500;letter-spacing:0.5px}
-.btn-start{background:#7A7A76;color:#fff;min-width:160px}
+.btn-start{background:#7A7A76;color:#fff;min-width:clamp(120px,35vw,160px)}
 .btn-start:hover{background:#8A8A86}
-.btn-next{background:#2A2A28;color:#7A7A76;border:1px solid #7A7A76;min-width:180px}
+.btn-next{background:#2A2A28;color:#7A7A76;border:1px solid #7A7A76;min-width:clamp(140px,40vw,180px)}
 .btn-next:hover{background:#333;color:#E8E8E4}
 .btn-extend{background:#2A2A28;color:#555;border:1px solid #2A2A2A;font-size:11px;padding:10px 14px}
 .btn-extend:hover{color:#888;border-color:#444}
@@ -90,7 +93,7 @@ body{background:#1A1A1A;padding:24px;min-height:100vh}
 
 <div class="header">
   <div class="header-left">
-    <div class="title">Temporizador L10 &nbsp;·&nbsp; Reunión de Operaciones &nbsp;·&nbsp; Caribbean Sign Supply</div>
+    <div class="title">Temporizador L10 &nbsp;·&nbsp; Caribbean Sign Supply</div>
     <div class="sub">90 minutos &nbsp;·&nbsp; Tiempo continuo</div>
   </div>
   <div class="total-block">
@@ -341,5 +344,7 @@ document.addEventListener("visibilitychange",async()=>{
   }
 });
 </script>
+
+<div style="text-align:center;padding:16px 0 8px;color:#333;font-size:11px;font-weight:500;letter-spacing:4px">JIGS</div>
 </body>
 </html>
