@@ -2,61 +2,58 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="L10 Timer">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Temporizador L10 — Caribbean Sign Supply</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none}
-body{background:#1A1A1A;padding:env(safe-area-inset-top,16px) env(safe-area-inset-right,16px) env(safe-area-inset-bottom,16px) env(safe-area-inset-left,16px);min-height:100vh;min-height:-webkit-fill-available;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif}
-.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #333;gap:12px}
-.header-left .title{color:#fff;font-size:clamp(12px,2.5vw,15px);font-weight:500;letter-spacing:0.3px;line-height:1.3}
-.header-left .sub{color:#666;font-size:clamp(10px,1.8vw,12px);margin-top:3px}
-.total-block{text-align:right;flex-shrink:0}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#1A1A1A;padding:24px;min-height:100vh}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #333}
+.header-left .title{color:#fff;font-size:16px;font-weight:500;letter-spacing:0.5px}
+.header-left .sub{color:#666;font-size:12px;margin-top:3px}
+.total-block{text-align:right}
 .total-label{color:#666;font-size:9px;letter-spacing:1.5px;text-transform:uppercase}
-.total-num{color:#888;font-size:clamp(20px,4vw,28px);font-weight:300;font-variant-numeric:tabular-nums}
+.total-num{color:#888;font-size:28px;font-weight:400;font-variant-numeric:tabular-nums}
 .total-num.running{color:#F4C300}
-.accent-line{height:3px;background:#7A7A76;margin-bottom:14px}
-.status-bar{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
-.status-badge{padding:5px 14px;font-size:10px;font-weight:600;letter-spacing:0.8px;background:#222;color:#555}
-.seg-progress{color:#555;font-size:11px;letter-spacing:0.5px}
-.overtime-banner{background:#C0392B;color:#fff;padding:10px;font-size:13px;font-weight:600;text-align:center;letter-spacing:0.5px;margin-bottom:10px;border-radius:2px}
-.seg-main{background:#111;border:1px solid #333;padding:clamp(16px,3vw,28px) clamp(16px,4vw,32px);margin-bottom:12px;text-align:center}
-.seg-num{color:#444;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
-.seg-name{color:#fff;font-size:clamp(22px,5vw,34px);font-weight:500;margin-bottom:6px;line-height:1.2}
-.seg-desc{color:#555;font-size:clamp(11px,1.8vw,13px);margin-bottom:clamp(16px,3vw,24px);line-height:1.6;max-width:640px;margin-left:auto;margin-right:auto}
-.timers-row{display:flex;align-items:flex-end;justify-content:center;gap:clamp(16px,4vw,40px);margin-bottom:10px}
+.accent-line{height:3px;background:#7A7A76;margin-bottom:20px}
+.status-bar{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:14px}
+.status-badge{padding:4px 14px;font-size:10px;font-weight:500;letter-spacing:0.8px;background:#222;color:#555}
+.seg-progress{color:#555;font-size:12px;letter-spacing:0.5px}
+.overtime-banner{background:#C0392B;color:#fff;padding:10px;font-size:13px;font-weight:500;text-align:center;letter-spacing:0.5px;margin-bottom:12px}
+.seg-main{background:#111;border:1px solid #333;padding:28px 32px;margin-bottom:14px;text-align:center}
+.seg-num{color:#444;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.seg-name{color:#fff;font-size:34px;font-weight:500;margin-bottom:8px}
+.seg-desc{color:#555;font-size:13px;margin-bottom:28px;line-height:1.6;max-width:640px;margin-left:auto;margin-right:auto}
+.timers-row{display:flex;align-items:flex-end;justify-content:center;gap:40px;margin-bottom:14px}
 .timer-block{display:flex;flex-direction:column;align-items:center}
-.timer-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:4px}
-.seg-timer{font-size:clamp(52px,12vw,88px);font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:-2px;color:#F4C300;line-height:1}
+.timer-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:6px}
+.seg-timer{font-size:88px;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:-3px;color:#F4C300;line-height:1}
 .seg-timer.warning{color:#E87C2E}
 .seg-timer.overtime{color:#C0392B}
-.seg-real{font-size:clamp(28px,6vw,48px);font-weight:300;font-variant-numeric:tabular-nums;color:#555;line-height:1}
+.seg-real{font-size:48px;font-weight:300;font-variant-numeric:tabular-nums;color:#555;line-height:1}
 .seg-real.active{color:#888}
-.seg-asig{font-size:clamp(22px,4.5vw,36px);font-weight:300;font-variant-numeric:tabular-nums;color:#444;line-height:1}
-.divider-v{width:1px;background:#2A2A2A;align-self:stretch;margin:0 4px}
-.assigned-info{font-size:clamp(10px,1.5vw,11px);color:#444;text-align:center;line-height:1.6}
-.progress-bar-wrap{background:#222;height:5px;margin-bottom:14px}
+.seg-asig{font-size:36px;font-weight:300;font-variant-numeric:tabular-nums;color:#444;line-height:1}
+.divider-v{width:1px;background:#2A2A2A;align-self:stretch;margin:0 8px}
+.assigned-info{font-size:11px;color:#444;text-align:center}
+.progress-bar-wrap{background:#222;height:5px;margin-bottom:18px}
 .progress-bar{height:5px;background:#7A7A76;transition:width 1s linear}
 .progress-bar.warning{background:#E87C2E}
 .progress-bar.overtime{background:#C0392B}
-.controls{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
-.btn{padding:14px 20px;border:none;cursor:pointer;font-size:clamp(12px,2vw,13px);font-weight:600;letter-spacing:0.5px;border-radius:2px;min-height:48px;-webkit-appearance:none;touch-action:manipulation}
-.btn-start{background:#7A7A76;color:#fff;min-width:clamp(140px,30vw,160px)}
-.btn-start:active{background:#6A6A66}
-.btn-next{background:#2A2A28;color:#7A7A76;border:1px solid #7A7A76;min-width:clamp(160px,35vw,180px)}
-.btn-next:active{background:#333;color:#E8E8E4}
+.controls{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.btn{padding:12px 24px;border:none;cursor:pointer;font-size:13px;font-weight:500;letter-spacing:0.5px}
+.btn-start{background:#7A7A76;color:#fff;min-width:160px}
+.btn-start:hover{background:#8A8A86}
+.btn-next{background:#2A2A28;color:#7A7A76;border:1px solid #7A7A76;min-width:180px}
+.btn-next:hover{background:#333;color:#E8E8E4}
+.btn-extend{background:#2A2A28;color:#555;border:1px solid #2A2A2A;font-size:11px;padding:10px 14px}
+.btn-extend:hover{color:#888;border-color:#444}
+.btn-reset{background:#1A1A1A;color:#444;border:1px solid #2A2A2A;font-size:12px}
+.btn-reset:hover{color:#666;border-color:#444}
+.btn:disabled{opacity:0.25;cursor:not-allowed}
+.extend-label{color:#444;font-size:10px;text-align:center;margin-bottom:6px;letter-spacing:0.5px}
 .extend-group{display:flex;flex-direction:column;align-items:center;gap:4px}
-.extend-label{color:#444;font-size:10px;text-align:center;letter-spacing:0.5px}
-.extend-btns{display:flex;gap:6px}
-.btn-extend{background:#2A2A28;color:#555;border:1px solid #2A2A2A;font-size:12px;padding:12px 16px;min-height:48px;min-width:72px}
-.btn-extend:active{color:#888;border-color:#444}
-.btn-reset{background:#1A1A1A;color:#444;border:1px solid #2A2A2A;font-size:12px;min-height:48px;padding:12px 18px}
-.btn-reset:active{color:#666;border-color:#444}
-.btn:disabled{opacity:0.2;cursor:not-allowed}
 .seg-list{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
-.seg-item{display:flex;align-items:center;gap:10px;padding:11px 14px;background:#111;border:1px solid #222;min-height:44px}
+.seg-item{display:flex;align-items:center;gap:12px;padding:9px 14px;background:#111;border:1px solid #222;cursor:pointer}
+.seg-item:hover{background:#1E1E1E}
 .seg-item.active{background:#1A1A1A;border-color:#7A7A76;border-left:3px solid #7A7A76}
 .seg-item.done{background:#0D0D0D;border-color:#111}
 .dot{width:7px;height:7px;border-radius:50%;background:#222;flex-shrink:0}
@@ -65,12 +62,12 @@ body{background:#1A1A1A;padding:env(safe-area-inset-top,16px) env(safe-area-inse
 .snum{color:#444;font-size:10px;letter-spacing:1px;min-width:20px}
 .snum.active{color:#7A7A76}
 .snum.done{color:#2A2A2A}
-.sname{color:#666;font-size:clamp(12px,2vw,13px);font-weight:500;flex:1}
+.sname{color:#666;font-size:13px;font-weight:500;flex:1}
 .sname.active{color:#fff}
 .sname.done{color:#2A2A2A}
-.sasig{color:#333;font-size:11px;min-width:40px;text-align:right;font-variant-numeric:tabular-nums}
+.sasig{color:#333;font-size:11px;min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
 .sasig.active{color:#666}
-.sreal{color:#444;font-size:11px;min-width:46px;text-align:right;font-variant-numeric:tabular-nums}
+.sreal{color:#444;font-size:11px;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
 .sreal.done{color:#1A7A4A}
 .sreal.done.over{color:#C0392B}
 .sreal.active{color:#F4C300}
@@ -78,38 +75,21 @@ body{background:#1A1A1A;padding:env(safe-area-inset-top,16px) env(safe-area-inse
 .bitem{flex:1;padding:8px 4px;border-right:1px solid #222;text-align:center}
 .bitem:last-child{border-right:none}
 .blabel{font-size:9px;color:#333;letter-spacing:1px;text-transform:uppercase}
-.bval{font-size:12px;font-variant-numeric:tabular-nums;color:#444;margin-top:3px;font-weight:500}
+.bval{font-size:13px;font-variant-numeric:tabular-nums;color:#444;margin-top:3px;font-weight:500}
 .bval.over{color:#C0392B}
 .bval.ok{color:#1A7A4A}
 .bval.cur{color:#F4C300}
-@media(max-width:480px){
-  .timers-row{gap:12px}
-  .divider-v{display:none}
-  .controls{gap:6px}
-  .btn-start,.btn-next{min-width:calc(50% - 3px);flex:1}
-  .extend-group{width:100%}
-  .extend-btns{width:100%}
-  .btn-extend{flex:1}
-}
-@media(orientation:landscape)and(max-height:500px){
-  .seg-desc{display:none}
-  .seg-main{padding:12px 20px}
-  .header{margin-bottom:8px;padding-bottom:8px}
-  .accent-line{margin-bottom:8px}
-  .status-bar{margin-bottom:8px}
-  .controls{margin-bottom:8px}
-}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-left">
-    <div class="title">Temporizador L10 &nbsp;·&nbsp; Caribbean Sign Supply</div>
-    <div class="sub">Equipo Directivo &nbsp;·&nbsp; 90 minutos &nbsp;·&nbsp; Tiempo continuo</div>
+    <div class="title">Temporizador L10 &nbsp;·&nbsp; Reunión de Operaciones &nbsp;·&nbsp; Caribbean Sign Supply</div>
+    <div class="sub">Equipo Directivo &nbsp;·&nbsp; 90 minutos &nbsp;·&nbsp; El tiempo corre de forma continua</div>
   </div>
   <div class="total-block">
-    <div class="total-label">Total restante</div>
+    <div class="total-label">Tiempo total restante</div>
     <div class="total-num" id="totalDisplay">90:00</div>
   </div>
 </div>
@@ -119,6 +99,7 @@ body{background:#1A1A1A;padding:env(safe-area-inset-top,16px) env(safe-area-inse
   TIEMPO EXTENDIDO — Este segmento superó su tiempo asignado
 </div>
 
+<div id="wakeLockStatus" style="display:none;text-align:center;font-size:9px;color:#2A7A4A;letter-spacing:1px;margin-bottom:6px">PANTALLA ACTIVA</div>
 <div class="status-bar">
   <div class="status-badge" id="statusBadge">EN ESPERA</div>
   <div class="seg-progress" id="segProgress">Segmento 1 de 7</div>
@@ -130,12 +111,12 @@ body{background:#1A1A1A;padding:env(safe-area-inset-top,16px) env(safe-area-inse
   <div class="seg-desc" id="segDesc">Check-in del equipo. Cada persona comparte brevemente una noticia personal o profesional.</div>
   <div class="timers-row">
     <div class="timer-block">
-      <div class="timer-label">Restante</div>
+      <div class="timer-label">Tiempo restante</div>
       <div class="seg-timer" id="segTimer">05:00</div>
     </div>
     <div class="divider-v"></div>
     <div class="timer-block">
-      <div class="timer-label">Real usado</div>
+      <div class="timer-label">Tiempo real usado</div>
       <div class="seg-real" id="segReal">00:00</div>
     </div>
     <div class="divider-v"></div>
@@ -156,7 +137,7 @@ body{background:#1A1A1A;padding:env(safe-area-inset-top,16px) env(safe-area-inse
   <button class="btn btn-next" id="btnNext" onclick="nextSegment()" disabled>SIGUIENTE SEGMENTO</button>
   <div class="extend-group">
     <div class="extend-label">Extender segmento actual</div>
-    <div class="extend-btns">
+    <div style="display:flex;gap:6px">
       <button class="btn btn-extend" onclick="extendSegment(2)" id="btnExt2" disabled>+2 min</button>
       <button class="btn btn-extend" onclick="extendSegment(5)" id="btnExt5" disabled>+5 min</button>
     </div>
@@ -179,6 +160,24 @@ const SEGS=[
 ];
 
 let cur=0,running=false;
+let wakeLock=null;
+
+async function requestWakeLock(){
+  try{
+    if("wakeLock" in navigator){
+      wakeLock=await navigator.wakeLock.request("screen");
+      document.getElementById("wakeLockStatus").style.display="block";
+    }
+  }catch(e){}
+}
+
+async function releaseWakeLock(){
+  if(wakeLock){
+    try{await wakeLock.release();}catch(e){}
+    wakeLock=null;
+  }
+  document.getElementById("wakeLockStatus").style.display="none";
+}
 let segRem=SEGS[0].min*60,segUsed=0,totalRem=90*60;
 let interval=null;
 const doneSegs=new Set();
@@ -235,7 +234,10 @@ function renderDone(){
   document.getElementById("segDesc").textContent="Los 7 segmentos han sido completados. Excelente reunion L10.";
   document.getElementById("segTimer").textContent="LISTO";
   document.getElementById("segTimer").className="seg-timer";
-  ["btnNext","btnExt2","btnExt5","btnStart"].forEach(id=>document.getElementById(id).disabled=true);
+  document.getElementById("btnNext").disabled=true;
+  document.getElementById("btnExt2").disabled=true;
+  document.getElementById("btnExt5").disabled=true;
+  document.getElementById("btnStart").disabled=true;
   const badge=document.getElementById("statusBadge");
   badge.textContent="COMPLETADA";badge.style.background="#1A7A4A";badge.style.color="#fff";
   renderList();renderBottom();
@@ -287,6 +289,7 @@ function startMeeting(){
   document.getElementById("btnExt2").disabled=false;
   document.getElementById("btnExt5").disabled=false;
   interval=setInterval(tick,1000);
+  requestWakeLock();
   render();
 }
 
@@ -299,8 +302,12 @@ function tick(){
 function nextSegment(){
   realTimes[cur]=segUsed;
   doneSegs.add(cur);cur++;
-  if(cur<SEGS.length){segRem=SEGS[cur].min*60;segUsed=0;}
-  else{clearInterval(interval);running=false;}
+  if(cur<SEGS.length){
+    segRem=SEGS[cur].min*60;
+    segUsed=0;
+  } else {
+    clearInterval(interval);running=false;
+  }
   render();
 }
 
@@ -310,6 +317,7 @@ function extendSegment(mins){
 
 function resetTimer(){
   clearInterval(interval);running=false;cur=0;
+  releaseWakeLock();
   segRem=SEGS[0].min*60;segUsed=0;totalRem=90*60;
   doneSegs.clear();
   for(let i=0;i<extra.length;i++){extra[i]=0;realTimes[i]=0;}
@@ -321,6 +329,12 @@ function resetTimer(){
 }
 
 render();
+
+document.addEventListener("visibilitychange",async()=>{
+  if(document.visibilityState==="visible"&&running&&!wakeLock){
+    await requestWakeLock();
+  }
+});
 </script>
 </body>
 </html>
