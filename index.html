@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es" style="background:#1A1A1A">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Temporizador L10 — Caribbean Sign Supply</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="L10 EOS">
+<style>
+.page-wrap{width:100%;max-width:960px;margin:0 auto;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#1A1A1A;padding:clamp(12px,3vw,24px);padding-top:max(env(safe-area-inset-top,20px) + 12px, 52px);min-height:100vh;min-height:-webkit-fill-available;display:flex;flex-direction:column;align-items:center}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #333}
+.header-left .title{color:#fff;font-size:clamp(12px,3.2vw,16px);font-weight:500;letter-spacing:0.3px;line-height:1.3}
+.header-left .sub{color:#888;font-size:clamp(10px,2.5vw,12px);margin-top:3px}
+.total-block{text-align:right}
+.total-label{color:#888;font-size:9px;letter-spacing:1.5px;text-transform:uppercase}
+.total-num{color:#AAAAAA;font-size:28px;font-weight:400;font-variant-numeric:tabular-nums}
+.total-num.running{color:#F4C300}
+.accent-line{height:3px;background:#7A7A76;margin-bottom:20px}
+.status-bar{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:14px}
+.status-badge{padding:4px 14px;font-size:10px;font-weight:500;letter-spacing:0.8px;background:#222;color:#888}
+.seg-progress{color:#888;font-size:12px;letter-spacing:0.5px}
+.overtime-banner{background:#C0392B;color:#fff;padding:10px;font-size:13px;font-weight:600;text-align:center;letter-spacing:0.5px;margin-bottom:12px}
+.seg-main{background:#111;border:none;padding:clamp(10px,2.5vw,24px) clamp(10px,3vw,24px);margin-bottom:10px;text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:280px}
+.seg-num{color:#888;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.seg-name{color:#fff;font-size:clamp(22px,5vw,36px);font-weight:500;margin-bottom:6px}
+.seg-desc{color:#888;font-size:clamp(12px,3vw,14px);margin-bottom:clamp(8px,2vw,16px);line-height:1.5;max-width:640px;margin-left:auto;margin-right:auto}
+.timers-row{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:12px;width:100%;max-width:800px;margin-left:auto;margin-right:auto}
+.timer-block{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-width:0;padding:12px 8px}
+.timer-block.main{flex:1.6}
+.timer-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#888;margin-bottom:6px}
+.seg-timer{font-size:clamp(52px,13vw,100px);font-weight:200;font-variant-numeric:tabular-nums;letter-spacing:-2px;color:#F4C300;line-height:1}
+.seg-timer.warning{color:#E87C2E}
+.seg-timer.overtime{color:#C0392B}
+.seg-real{font-size:clamp(26px,6.5vw,52px);font-weight:300;font-variant-numeric:tabular-nums;color:#777;line-height:1}
+.seg-real.active{color:#AAAAAA}
+.seg-asig{font-size:clamp(22px,5.5vw,42px);font-weight:300;font-variant-numeric:tabular-nums;color:#888;line-height:1}
+.divider-v{display:none}
+.assigned-info{font-size:12px;color:#888;text-align:center;margin-top:4px}
+.progress-bar-wrap{background:#222;height:5px;margin-bottom:18px}
+.progress-bar{height:5px;background:#7A7A76;transition:width 1s linear}
+.progress-bar.warning{background:#E87C2E}
+.progress-bar.overtime{background:#C0392B}
+.controls{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.btn{padding:12px 24px;border:none;cursor:pointer;font-size:13px;font-weight:500;letter-spacing:0.5px}
+.btn-start{background:#7A7A76;color:#fff;min-width:clamp(120px,35vw,160px)}
+.btn-start:hover{background:#8A8A86}
+.btn-next{background:#2A2A28;color:#7A7A76;border:1px solid #7A7A76;min-width:clamp(140px,40vw,180px)}
+.btn-next:hover{background:#333;color:#E8E8E4}
+.btn-extend{background:#2A2A28;color:#555;border:1px solid #2A2A2A;font-size:11px;padding:10px 14px}
+.btn-extend:hover{color:#888;border-color:#444}
+.btn-reset{background:#1A1A1A;color:#444;border:1px solid #2A2A2A;font-size:12px}
+.btn-reset:hover{color:#666;border-color:#444}
+.btn:disabled{opacity:0.25;cursor:not-allowed}
+.extend-label{color:#888;font-size:10px;text-align:center;margin-bottom:6px;letter-spacing:0.5px}
+.extend-group{display:flex;flex-direction:column;align-items:center;gap:4px}
+.seg-list{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.seg-item{display:flex;align-items:center;gap:12px;padding:9px 14px;background:#111;border:1px solid #222;cursor:pointer}
+.seg-item:hover{background:#1E1E1E}
+.seg-item.active{background:#1A1A1A;border-color:#7A7A76;border-left:3px solid #7A7A76}
+.seg-item.done{background:#0D0D0D;border-color:#111}
+.dot{width:7px;height:7px;border-radius:50%;background:#222;flex-shrink:0}
+.dot.active{background:#7A7A76}
+.dot.done{background:#1A7A4A}
+.snum{color:#777;font-size:10px;letter-spacing:1px;min-width:20px}
+.snum.active{color:#7A7A76}
+.snum.done{color:#2A2A2A}
+.sname{color:#999;font-size:13px;font-weight:500;flex:1}
+.sname.active{color:#fff}
+.sname.done{color:#2A2A2A}
+.sasig{color:#666;font-size:11px;min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
+.sasig.active{color:#666}
+.sreal{color:#444;font-size:11px;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+.sreal.done{color:#1A7A4A}
+.sreal.done.over{color:#C0392B}
+.sreal.active{color:#F4C300}
+.bottom-bar{display:flex;gap:0;border-top:1px solid #222}
+.bitem{flex:1;padding:8px 4px;border-right:1px solid #222;text-align:center}
+.bitem:last-child{border-right:none}
+.blabel{font-size:9px;color:#333;letter-spacing:1px;text-transform:uppercase}
+.bval{font-size:13px;font-variant-numeric:tabular-nums;color:#444;margin-top:3px;font-weight:500}
+.bval.over{color:#C0392B}
+.bval.ok{color:#1A7A4A}
+.bval.cur{color:#F4C300}
+
+@media(min-width:768px){
+  .header-left .title{font-size:20px;}
+  .header-left .sub{font-size:15px;}
+  .total-num{font-size:38px;}
+  .total-label{font-size:11px;}
+  .seg-name{font-size:42px;}
+  .seg-num{font-size:13px;}
+  .seg-desc{font-size:16px;}
+  .seg-timer{font-size:110px !important;letter-spacing:-3px;}
+  .seg-real{font-size:64px !important;}
+  .seg-asig{font-size:52px !important;}
+  .timer-label{font-size:13px;}
+  .assigned-info{font-size:15px;}
+  .status-badge{font-size:13px;padding:6px 18px;}
+  .seg-progress{font-size:14px;}
+  .btn{font-size:15px;padding:14px 28px;}
+  .sname{font-size:16px;}
+  .snum{font-size:13px;}
+  .sasig{font-size:14px;}
+  .sreal{font-size:14px;}
+  .extend-label{font-size:13px;}
+  .seg-main{min-height:340px;padding:28px 40px;}
+  .seg-list .seg-item{padding:12px 18px;}
+  .timers-row{gap:0;justify-content:center;}
+  .timer-block{padding:16px 12px;}
+  .timer-block.main{flex:1.8;}
+}
+
+@media(orientation:landscape) and (max-height:500px){
+  body{
+    padding:env(safe-area-inset-top,6px) env(safe-area-inset-right,12px) env(safe-area-inset-bottom,6px) env(safe-area-inset-left,12px);
+    justify-content:center;
+    overflow:hidden;
+  }
+  .page-wrap{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    height:100%;
+    max-height:calc(100vh - 12px);
+    overflow:hidden;
+    gap:0;
+  }
+  .header{display:none;}
+  .accent-line{display:none;}
+  .jigs-footer{display:none;}
+  #wakeLockStatus{display:none !important;}
+  .seg-list{display:none;}
+  .bottom-bar{display:none;}
+  .extend-group{display:none;}
+  .btn-start{display:none;}
+  .seg-desc{display:none;}
+
+  .overtime-banner{padding:4px 12px;font-size:10px;margin-bottom:3px;}
+
+  .status-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:3px;
+    padding:0 4px;
+  }
+  .status-badge{padding:3px 10px;font-size:9px;}
+  .seg-progress{font-size:9px;}
+
+  .seg-main{
+    min-height:unset;
+    flex:1;
+    padding:6px 20px;
+    margin-bottom:3px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .seg-num{font-size:8px;margin-bottom:1px;color:#666;}
+  .seg-name{font-size:26px !important;margin-bottom:4px;}
+
+  .timers-row{margin-bottom:3px;}
+  .timer-block{padding:3px 10px;}
+  .timer-block.main{flex:1.8;}
+  .timer-label{font-size:7px;margin-bottom:1px;}
+  .seg-timer{font-size:62px !important;letter-spacing:-2px;}
+  .seg-real{font-size:34px !important;}
+  .seg-asig{font-size:28px !important;}
+
+  .assigned-info{font-size:9px;color:#666;margin-top:2px;}
+
+  .progress-bar-wrap{height:3px;margin-bottom:4px;}
+
+  .controls{
+    margin-bottom:3px;
+    gap:8px;
+    flex-wrap:nowrap;
+    justify-content:center;
+  }
+  .btn-next{
+    padding:8px 20px;
+    font-size:12px;
+    min-width:unset;
+    flex:0 1 auto;
+  }
+  .btn-reset{
+    padding:8px 14px;
+    font-size:11px;
+  }
+  .btn-extend{display:none;}
+  .extend-label{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="title">Temporizador L10 &nbsp;·&nbsp; Caribbean Sign Supply</div>
+    <div class="sub">90 minutos &nbsp;·&nbsp; Tiempo continuo</div>
+  </div>
+  <div class="total-block">
+    <div class="total-label">Tiempo total restante</div>
+    <div class="total-num" id="totalDisplay">90:00</div>
+  </div>
+</div>
+<div class="accent-line"></div>
+
+<div class="page-wrap"><div id="overtimeBanner" style="display:none" class="overtime-banner">
+  TIEMPO EXTENDIDO — Este segmento superó su tiempo asignado
+</div>
+
+<div id="wakeLockStatus" style="display:none;text-align:center;font-size:9px;color:#2A7A4A;letter-spacing:1px;margin-bottom:6px">PANTALLA ACTIVA</div>
+<div class="status-bar">
+  <div class="status-badge" id="statusBadge">EN ESPERA</div>
+  <div class="seg-progress" id="segProgress">Segmento 1 de 7</div>
+</div>
+
+<div class="seg-main">
+  <div class="seg-num" id="segNum">SEGMENTO 01</div>
+  <div class="seg-name" id="segName">Registrarse</div>
+  <div class="seg-desc" id="segDesc">Check-in del equipo. Cada persona comparte brevemente una noticia personal o profesional.</div>
+  <div class="timers-row">
+    <div class="timer-block">
+      <div class="timer-label">Asignado</div>
+      <div class="seg-asig" id="segAsig">05:00</div>
+    </div>
+    <div class="divider-v"></div>
+    <div class="timer-block main">
+      <div class="timer-label">Tiempo restante</div>
+      <div class="seg-timer" id="segTimer">05:00</div>
+    </div>
+    <div class="divider-v"></div>
+    <div class="timer-block">
+      <div class="timer-label">Tiempo real usado</div>
+      <div class="seg-real" id="segReal">00:00</div>
+    </div>
+  </div>
+  <div class="assigned-info" id="assignedInfo">Tiempo asignado: 5 min</div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar" id="progressBar" style="width:100%"></div>
+</div>
+
+<div class="controls">
+  <button class="btn btn-start" id="btnStart" onclick="startMeeting()">INICIAR REUNION</button>
+  <button class="btn btn-next" id="btnNext" onclick="nextSegment()" disabled>SIGUIENTE SEGMENTO</button>
+  <div class="extend-group">
+    <div class="extend-label">Extender segmento actual</div>
+    <div style="display:flex;gap:6px">
+      <button class="btn btn-extend" onclick="extendSegment(2)" id="btnExt2" disabled>+2 min</button>
+      <button class="btn btn-extend" onclick="extendSegment(5)" id="btnExt5" disabled>+5 min</button>
+    </div>
+  </div>
+  <button class="btn btn-reset" onclick="resetTimer()">RESET</button>
+</div>
+
+<div class="seg-list" id="segList"></div>
+<div class="bottom-bar" id="bottomBar"></div>
+
+<script>
+const SEGS=[
+  {num:"01",name:"Registrarse",        desc:"Check-in del equipo. Cada persona comparte brevemente una noticia personal o profesional. Abre la reunion y conecta al equipo.",min:5},
+  {num:"02",name:"Indicadores KPI",    desc:"Revision rapida del Scorecard. Solo se nombran los KPIs en rojo. Si requiere atencion, se convierte en Asunto O&O.",min:5},
+  {num:"03",name:"Rocas",              desc:"Estado de cada Roca: En ruta o Fuera de ruta. Sin detalle — si esta fuera de ruta, se agrega como Asunto O&O.",min:5},
+  {num:"04",name:"Titulares",          desc:"Noticias importantes sobre clientes o empleados. Pueden convertirse en Asuntos O&O si requieren atencion.",min:5},
+  {num:"05",name:"Tareas (To-Dos)",    desc:"Revision de compromisos de la semana anterior. Completados se cierran, incompletos se explican. Se crean nuevos To-Dos.",min:5},
+  {num:"06",name:"Asuntos O&O — IDS", desc:"El nucleo de la reunion. Se priorizan los Asuntos mas importantes y se resuelven con el proceso IDS: Identificar · Discutir · Resolver.",min:60},
+  {num:"07",name:"Conclusion",         desc:"Resumen de decisiones. Cascada de mensajes al resto de la organizacion. Calificacion de la reunion del 1 al 10.",min:5},
+];
+
+let cur=0,running=false;
+let wakeLock=null;
+
+async function requestWakeLock(){
+  try{
+    if("wakeLock" in navigator){
+      wakeLock=await navigator.wakeLock.request("screen");
+      document.getElementById("wakeLockStatus").style.display="block";
+    }
+  }catch(e){}
+}
+
+async function releaseWakeLock(){
+  if(wakeLock){
+    try{await wakeLock.release();}catch(e){}
+    wakeLock=null;
+  }
+  document.getElementById("wakeLockStatus").style.display="none";
+}
+let segRem=SEGS[0].min*60,segUsed=0,totalRem=90*60;
+let interval=null;
+const doneSegs=new Set();
+const extra=new Array(SEGS.length).fill(0);
+const realTimes=new Array(SEGS.length).fill(0);
+
+function fmt(sec){
+  const s=Math.abs(Math.round(sec));
+  return (sec<0?"-":"")+String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+}
+
+function render(){
+  if(cur>=SEGS.length){renderDone();return;}
+  const seg=SEGS[cur];
+  document.getElementById("segNum").textContent="SEGMENTO "+seg.num;
+  document.getElementById("segName").textContent=seg.name;
+  document.getElementById("segDesc").textContent=seg.desc;
+  document.getElementById("segProgress").textContent="Segmento "+(cur+1)+" de "+SEGS.length;
+  const te=document.getElementById("segTimer");
+  te.textContent=fmt(segRem);
+  te.className="seg-timer"+(segRem<0?" overtime":segRem<=60?" warning":"");
+  const re=document.getElementById("segReal");
+  re.textContent=fmt(segUsed);
+  re.className="seg-real"+(segUsed>0?" active":"");
+  const assigned=seg.min*60+extra[cur];
+  document.getElementById("segAsig").textContent=fmt(assigned);
+  document.getElementById("totalDisplay").textContent=fmt(totalRem);
+  document.getElementById("totalDisplay").className="total-num"+(running?" running":"");
+  const pct=Math.max(0,Math.min(100,segRem/assigned*100));
+  const pb=document.getElementById("progressBar");
+  pb.style.width=pct+"%";
+  pb.className="progress-bar"+(segRem<0?" overtime":segRem<=60?" warning":"");
+  const extraMin=Math.round(extra[cur]/60);
+  document.getElementById("assignedInfo").textContent=
+    "Asignado: "+seg.min+" min"+
+    (extraMin>0?" (+"+ extraMin+" min extra = "+(seg.min+extraMin)+" min total)":"")+
+    "   ·   Real usado: "+fmt(segUsed)+
+    (segRem<0?"   ·   Sobre tiempo: "+fmt(-segRem):"   ·   Disponible: "+fmt(segRem));
+  document.getElementById("overtimeBanner").style.display=segRem<0?"block":"none";
+  const badge=document.getElementById("statusBadge");
+  if(running){
+    badge.textContent=segRem<0?"TIEMPO EXTENDIDO":"EN CURSO";
+    badge.style.background=segRem<0?"#C0392B":"#7A7A76";
+    badge.style.color="#fff";
+  } else {
+    badge.textContent="EN ESPERA";
+    badge.style.background="#222";badge.style.color="#555";
+  }
+  renderList();renderBottom();
+}
+
+function renderDone(){
+  document.getElementById("segName").textContent="Reunion completada";
+  document.getElementById("segDesc").textContent="Los 7 segmentos han sido completados. Excelente reunion L10.";
+  document.getElementById("segTimer").textContent="LISTO";
+  document.getElementById("segTimer").className="seg-timer";
+  document.getElementById("btnNext").disabled=true;
+  document.getElementById("btnExt2").disabled=true;
+  document.getElementById("btnExt5").disabled=true;
+  document.getElementById("btnStart").disabled=true;
+  const badge=document.getElementById("statusBadge");
+  badge.textContent="COMPLETADA";badge.style.background="#1A7A4A";badge.style.color="#fff";
+  renderList();renderBottom();
+}
+
+function renderList(){
+  const el=document.getElementById("segList");
+  el.innerHTML="";
+  SEGS.forEach((seg,i)=>{
+    const isDone=doneSegs.has(i),isActive=i===cur&&cur<SEGS.length;
+    const div=document.createElement("div");
+    div.className="seg-item"+(isActive?" active":"")+(isDone?" done":"");
+    const totalMin=seg.min+Math.round(extra[i]/60);
+    const isOver=isDone&&realTimes[i]>(seg.min*60+extra[i]);
+    const realStr=isDone?fmt(realTimes[i]):(isActive&&segUsed>0?fmt(segUsed):"—");
+    div.innerHTML=
+      '<div class="dot'+(isActive?" active":isDone?" done":"")+'"></div>'+
+      '<div class="snum'+(isActive?" active":isDone?" done":"")+'">'+seg.num+'</div>'+
+      '<div class="sname'+(isActive?" active":isDone?" done":"")+'">'+seg.name+'</div>'+
+      '<div class="sasig'+(isActive?" active":"")+'">'+totalMin+' min</div>'+
+      '<div class="sreal'+(isDone?(isOver?" done over":" done"):isActive?" active":"")+'">'+realStr+'</div>';
+    el.appendChild(div);
+  });
+}
+
+function renderBottom(){
+  const el=document.getElementById("bottomBar");
+  el.innerHTML="";
+  SEGS.forEach((seg,i)=>{
+    const isDone=doneSegs.has(i),isActive=i===cur;
+    const used=isDone?realTimes[i]:(isActive?segUsed:0);
+    const assigned=seg.min*60+extra[i];
+    const over=used>assigned;
+    const div=document.createElement("div");
+    div.className="bitem";
+    div.innerHTML=
+      '<div class="blabel">'+seg.num+'</div>'+
+      '<div class="bval'+(isDone?(over?" over":" ok"):(isActive&&segUsed>0?" cur":""))+'">'+
+        (isDone||(isActive&&segUsed>0)?fmt(used):"—")+'</div>';
+    el.appendChild(div);
+  });
+}
+
+function startMeeting(){
+  if(running)return;
+  running=true;
+  document.getElementById("btnStart").disabled=true;
+  document.getElementById("btnNext").disabled=false;
+  document.getElementById("btnExt2").disabled=false;
+  document.getElementById("btnExt5").disabled=false;
+  interval=setInterval(tick,1000);
+  requestWakeLock();
+  render();
+}
+
+function tick(){
+  segRem--;segUsed++;realTimes[cur]=segUsed;
+  if(totalRem>0)totalRem--;
+  if(segRem===0) playTimeUp();
+  if(segRem===60) playWarning();
+  render();
+}
+
+function nextSegment(){
+  realTimes[cur]=segUsed;
+  doneSegs.add(cur);cur++;
+  if(cur<SEGS.length){
+    segRem=SEGS[cur].min*60;
+    segUsed=0;
+  } else {
+    clearInterval(interval);running=false;
+    playComplete();
+  }
+  render();
+}
+
+function extendSegment(mins){
+  segRem+=mins*60;extra[cur]+=mins*60;totalRem+=mins*60;render();
+}
+
+function resetTimer(){
+  clearInterval(interval);running=false;cur=0;
+  releaseWakeLock();
+  segRem=SEGS[0].min*60;segUsed=0;totalRem=90*60;
+  doneSegs.clear();
+  for(let i=0;i<extra.length;i++){extra[i]=0;realTimes[i]=0;}
+  document.getElementById("btnStart").disabled=false;
+  document.getElementById("btnNext").disabled=true;
+  document.getElementById("btnExt2").disabled=true;
+  document.getElementById("btnExt5").disabled=true;
+  render();
+}
+
+
+let audioCtx = null;
+
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playBeep(freq, duration, vol, type){
+  try{
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(vol || 0.4, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  }catch(e){}
+}
+
+function playWarning(){
+  playBeep(880, 0.15, 0.3);
+  setTimeout(()=>playBeep(880, 0.15, 0.3), 200);
+}
+
+function playTimeUp(){
+  playBeep(660, 0.12, 0.5);
+  setTimeout(()=>playBeep(880, 0.12, 0.5), 150);
+  setTimeout(()=>playBeep(1100, 0.4, 0.6), 300);
+}
+
+function playComplete(){
+  playBeep(523, 0.15, 0.4);
+  setTimeout(()=>playBeep(659, 0.15, 0.4), 180);
+  setTimeout(()=>playBeep(784, 0.15, 0.4), 360);
+  setTimeout(()=>playBeep(1047, 0.5, 0.5), 540);
+}
+
+function unlockAudio(){
+  try{ getAudioCtx().resume(); }catch(e){}
+  document.removeEventListener('touchstart', unlockAudio);
+  document.removeEventListener('click', unlockAudio);
+}
+document.addEventListener('touchstart', unlockAudio);
+document.addEventListener('click', unlockAudio);
+
+render();
+
+document.addEventListener("visibilitychange",async()=>{
+  if(document.visibilityState==="visible"&&running&&!wakeLock){
+    await requestWakeLock();
+  }
+});
+</script>
+
+<div class="jigs-footer" style="text-align:center;padding:16px 0 env(safe-area-inset-bottom,8px);color:#555;font-size:11px;font-weight:500;letter-spacing:4px">JIGS</div></div>
+</body>
+</html>
